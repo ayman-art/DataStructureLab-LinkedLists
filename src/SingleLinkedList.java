@@ -1,4 +1,29 @@
-ces the element at the specified position in this list with the
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+interface ILinkedList {
+    /**
+     * Inserts a specified element at the specified position in the list.
+     * @param index
+     * @param element
+     */
+    public void add(int index, Object element);
+    /**
+     * Inserts the specified element at the end of the list.
+     * @param element
+     */
+    public void add(Object element);
+    /**
+     * @param index
+     * @return the element at the specified position in this list.
+     */
+    public Object get(int index);
+
+    /**
+     * Replaces the element at the specified position in this list with the
      * specified element.
      * @param index
      * @param element
@@ -42,22 +67,68 @@ public class SingleLinkedList implements ILinkedList {
 
         Node(int val) {
             value = val;
+            next = null;
+        }
+
+        Node(int val, Node nex) {
+            value = val;
+            next = nex;
         }
     }
 
     private Node head, tail;
     int size;
 
+    SingleLinkedList() {
+
+        head = new Node(0);
+        tail = head;
+        size = 0;
+
+    }
+
     public void add(int index, Object element) {
-        
+
+        if (index < 0 || index > size) {
+            System.out.println("Error");
+            return;
+        }
+
+        Node temp = head;
+
+        for (int i = 0; i < index; ++i)
+            temp = temp.next;
+
+        Node elem = new Node((int) element, temp.next);
+        temp.next = elem;
+
+        size++;
+        printList();
+
     }
 
     public void add(Object element) {
 
+        tail.next = new Node((int) element);
+        tail = tail.next;
+
+        size++;
+        printList();
+
     }
 
     public Object get(int index) {
-        return null;
+
+        if (index < 0 || index >= size) {
+            return -1;
+        }
+
+        Node temp = head.next;
+        for (int i = 0; i < index; ++i)
+            temp = temp.next;
+
+        return temp.value;
+
     }
 
     public void set(int index, Object element) {
@@ -88,65 +159,38 @@ public class SingleLinkedList implements ILinkedList {
         return false;
     }
 
+    private void printList() {
+        Node temp = head.next;
+
+        System.out.print("[");
+        while (temp != null) {
+            System.out.print(temp.value);
+
+            if (temp.next != null)
+                System.out.print(", ");
+
+            temp = temp.next;
+        }
+        System.out.println("]");
+    }
 
     public static void main(String[] args) {
-        /* Enter your code here. Read input from STDIN. Print output to STDOUT. */
-        /* Enter your code here. Read input from STDIN. Print output to STDOUT. */
-        Scanner sc = new Scanner(System.in);
-        String linked = sc.nextLine();
-        
-        String op = sc.nextLine();
-        System.out.println(linked);
-        
-        
-        //Replace the printing statements by the function calls
-        
-        switch(op){
-                
-            case "add":
-                 
-                System.out.println(op);
-                System.out.println(sc.nextInt());
-                break;
-            case "addToIndex":
-                System.out.println(op);
-                System.out.println(sc.nextInt());
-                System.out.println(sc.nextInt());
-                break;
-            case "get":
-                System.out.println(op);  
-                System.out.println(sc.nextInt());
-                break;  
-            case "set":
-                System.out.println(op); 
-                System.out.println(sc.nextInt());
-                System.out.println(sc.nextInt());
-                break;   
-            case "clear":
-                System.out.println(op); 
-                break;   
-            case "isEmpty":
-                System.out.println(op); 
-                break;   
-            case "remove":
-                System.out.println(op);
-                System.out.println(sc.nextInt());
-                break;    
-            case "size":
-                System.out.println(op);
-                break;    
-            case "sublist":
-                System.out.println(op); 
-                System.out.println(sc.nextInt());
-                System.out.println(sc.nextInt());
-                break; 
-            case "contains":
-                System.out.println(op);
-                System.out.println(sc.nextInt());
-                break;    
-                
-                               
-        }
+        SingleLinkedList ls = new SingleLinkedList();
+        ls.add(2);
+        ls.add(3);
+        ls.add(4);
+        ls.add(6);
+
+        ls.add(1, 10);
+        ls.add(10, 10);
+        ls.add(5, 60);
+        ls.add(-5, 50);
+        ls.add(0, 20);
+        ls.add(4, 30);
+
+        System.out.println(ls.get(0));
+        System.out.println(ls.get(4));
+        System.out.println(ls.get(2));
+        System.out.println(ls.get(15));
     }
 }
-
