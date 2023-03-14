@@ -1,29 +1,4 @@
-import java.io.*;
-import java.util.*;
-import java.text.*;
-import java.math.*;
-import java.util.regex.*;
-
-interface ILinkedList {
-    /**
-     * Inserts a specified element at the specified position in the list.
-     * @param index
-     * @param element
-     */
-    public void add(int index, Object element);
-    /**
-     * Inserts the specified element at the end of the list.
-     * @param element
-     */
-    public void add(Object element);
-    /**
-     * @param index
-     * @return the element at the specified position in this list.
-     */
-    public Object get(int index);
-
-    /**
-     * Replaces the element at the specified position in this list with the
+ces the element at the specified position in this list with the
      * specified element.
      * @param index
      * @param element
@@ -116,5 +91,62 @@ public class SingleLinkedList implements ILinkedList {
 
     public static void main(String[] args) {
         /* Enter your code here. Read input from STDIN. Print output to STDOUT. */
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. */
+        Scanner sc = new Scanner(System.in);
+        String linked = sc.nextLine();
+        
+        String op = sc.nextLine();
+        System.out.println(linked);
+        
+        
+        //Replace the printing statements by the function calls
+        
+        switch(op){
+                
+            case "add":
+                 
+                System.out.println(op);
+                System.out.println(sc.nextInt());
+                break;
+            case "addToIndex":
+                System.out.println(op);
+                System.out.println(sc.nextInt());
+                System.out.println(sc.nextInt());
+                break;
+            case "get":
+                System.out.println(op);  
+                System.out.println(sc.nextInt());
+                break;  
+            case "set":
+                System.out.println(op); 
+                System.out.println(sc.nextInt());
+                System.out.println(sc.nextInt());
+                break;   
+            case "clear":
+                System.out.println(op); 
+                break;   
+            case "isEmpty":
+                System.out.println(op); 
+                break;   
+            case "remove":
+                System.out.println(op);
+                System.out.println(sc.nextInt());
+                break;    
+            case "size":
+                System.out.println(op);
+                break;    
+            case "sublist":
+                System.out.println(op); 
+                System.out.println(sc.nextInt());
+                System.out.println(sc.nextInt());
+                break; 
+            case "contains":
+                System.out.println(op);
+                System.out.println(sc.nextInt());
+                break;    
+                
+                               
+        }
     }
 }
+
