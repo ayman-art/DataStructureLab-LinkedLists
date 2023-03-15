@@ -82,10 +82,27 @@ public class PolynomialSolver implements IPolynomialSolver{
     }
 
     public String print(char poly) {
-        ILinkedList_ temp = getPoly(poly);
 
+
+        ILinkedList_ list = getPoly(poly);
+
+        if (list == null) {
+            System.out.println("Error");
+            return null;
+        }
+
+        int n = list.size();
+        String expression = "";
+
+        for(int i =0 ; i < n ; ++i)
+            expression+= getTerm(((int[]) list.get(i)));
         
-        return null;
+            
+        if(expression.charAt(0)=='+')
+            return expression.substring(1);   
+        return expression;
+    
+        
     }
 
     public void clearPolynomial(char poly) {
