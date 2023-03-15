@@ -82,11 +82,23 @@ public class PolynomialSolver implements IPolynomialSolver{
     }
 
     public String print(char poly) {
+        ILinkedList_ temp = getPoly(poly);
+
+        
         return null;
     }
 
     public void clearPolynomial(char poly) {
+        
+        ILinkedList_ temp = getPoly(poly);
 
+        if (temp == null) {
+            System.out.println("Error");
+            return;
+        }
+        
+        temp.clear();
+        
     }
 
     public float evaluatePolynomial(char poly, float value) {
@@ -158,6 +170,50 @@ public class PolynomialSolver implements IPolynomialSolver{
             default:
                 return null;
         }
+    }
+
+
+    private String getTerm(int[] term) {
+
+
+        String termString = "";
+
+        if(term[0]==0){
+            return termString;
+        }
+    
+        
+        // Sign
+        if(term[0]>0)
+            termString += "+";
+        
+        
+        // coof
+        if(term[1]==0){
+            return termString+String.valueOf(term[0]);
+        }
+        
+                
+        if(term[0]==1 );
+            
+        else if (term[0]==-1){
+            termString += "-";
+        }else{
+            termString +=String.valueOf(term[0]);
+        }
+
+        // exp
+        if(term[1]==0);
+        
+        else if(term[1]==1){
+            termString += "x";
+        }else{
+            termString +="x^" + String.valueOf(term[1]);
+        }
+
+        
+
+        return termString;
     }
 
     public static void HandleInput(IPolynomialSolver list) {
