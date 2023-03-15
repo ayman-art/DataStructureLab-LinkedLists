@@ -4,7 +4,7 @@ import java.text.*;
 import java.math.*;
 import java.util.regex.*;
 
-interface ILinkedList {
+interface ILinkedList_ {
     /**
      * Inserts a specified element at the specified position in the list.
      * @param index
@@ -51,7 +51,7 @@ interface ILinkedList {
      * @param toIndex
      * @return a view of the portion of this list between the specified fromIndex and toIndex, inclusively.
      */
-    public ILinkedList sublist(int fromIndex, int toIndex);
+    public ILinkedList_ sublist(int fromIndex, int toIndex);
     /**
      * @param o
      * @return true if this list contains an element with the same value as the specified element.
@@ -60,18 +60,21 @@ interface ILinkedList {
 }
 
 
-public class SingleLinkedList implements ILinkedList {
+public class DoubleLinkedList implements ILinkedList_ {
+
     private class Node {
         public int value;
-        public Node next;
+        public Node prev, next;
 
         Node(int val) {
             value = val;
+            prev = null;
             next = null;
         }
 
-        Node(int val, Node nex) {
+        Node(int val, Node pre, Node nex) {
             value = val;
+            prev = pre;
             next = nex;
         }
     }
@@ -79,16 +82,13 @@ public class SingleLinkedList implements ILinkedList {
     private Node head, tail;
     int size;
 
-    SingleLinkedList() {
-
+    DoubleLinkedList() {
         head = new Node(0);
         tail = head;
         size = 0;
-
     }
 
     public void add(int index, Object element) {
-
         if (index < 0 || index > size) {
             System.out.println("Error");
             return;
@@ -99,22 +99,22 @@ public class SingleLinkedList implements ILinkedList {
         for (int i = 0; i < index; ++i)
             temp = temp.next;
 
-        Node elem = new Node((int) element, temp.next);
+        Node elem = new Node((int) element, temp, temp.next);
         temp.next = elem;
+
+        if (elem.next != null)
+            elem.next.prev = elem;
 
         size++;
 
         printList(this);
-
     }
 
     public void add(Object element) {
-
-        tail.next = new Node((int) element);
+        tail.next = new Node((int) element, tail, null);
         tail = tail.next;
 
         size++;
-
     }
 
     public Object get(int index) {
@@ -128,11 +128,9 @@ public class SingleLinkedList implements ILinkedList {
             temp = temp.next;
 
         return temp.value;
-
     }
 
     public void set(int index, Object element) {
-
         if (index < 0 || index >= size) {
             System.out.println("Error");
             return;
@@ -145,15 +143,12 @@ public class SingleLinkedList implements ILinkedList {
         temp.value = (int) element;
 
         printList(this);
-
     }
 
     public void clear() {
-
         size = 0;
         head.next = null;
-        tail = null;
-
+        tail = head;
     }
 
     public boolean isEmpty() {
@@ -161,19 +156,20 @@ public class SingleLinkedList implements ILinkedList {
     }
 
     public void remove(int index) {
-
         if (index < 0 || index >= size) {
             System.out.println("Error");
             return;
         }
 
         Node temp = head;
-        for (int i = 0; i < index; ++i)
+        for (int i = 0; i <= index; ++i)
             temp = temp.next;
 
-        temp.next = temp.next.next;
-        size--;
+        temp.prev.next = temp.next;
+        if (temp.next != null)
+            temp.next.prev = temp.prev;
 
+        size--;
         printList(this);
     }
 
@@ -181,29 +177,29 @@ public class SingleLinkedList implements ILinkedList {
         return size;
     }
 
-    public ILinkedList sublist(int fromIndex, int toIndex) {
-
+    public ILinkedList_ sublist(int fromIndex, int toIndex) {
         if (fromIndex < 0 || fromIndex >= size || toIndex < 0 || toIndex >= size || fromIndex > toIndex) {
             return null;
         }
 
-        ILinkedList sub = new SingleLinkedList();
-        Node temp = head;
+        ILinkedList_ sub = new DoubleLinkedList();
+        Node temp = head.next;
 
-        for (int i = 0; i <= fromIndex; ++i)
-            temp = temp.next;
+        for (int i = 0; i <= toIndex; ++i) {
+            if (i < fromIndex)
+            {
+                temp = temp.next;
+                continue;
+            }
 
-        for (int i = fromIndex; i <= toIndex; ++i) {
             sub.add(temp.value);
             temp = temp.next;
         }
 
         return sub;
-
     }
 
     public boolean contains(Object o) {
-
         Node temp =  head.next;
 
         while (temp != null) {
@@ -214,10 +210,9 @@ public class SingleLinkedList implements ILinkedList {
         }
 
         return false;
-
     }
 
-    public static void printList(ILinkedList lst) {
+    public static void printList(ILinkedList_ lst) {
         int n = lst.size();
 
         System.out.print("[");
@@ -228,8 +223,8 @@ public class SingleLinkedList implements ILinkedList {
                 System.out.print(", ");
         }
         System.out.println("]");
-
     }
+
 
     public static int[] getArr(Scanner scanner) {
         String line = scanner.nextLine().replaceAll("\\[|\\]", "");
@@ -247,7 +242,7 @@ public class SingleLinkedList implements ILinkedList {
         return arr;
     }
 
-    public static void HandleInput(Scanner scanner, ILinkedList list) {
+    public static void HandleInput(Scanner scanner, ILinkedList_ list) {
         String operation = scanner.nextLine();
 
         int num, idx;
@@ -301,7 +296,7 @@ public class SingleLinkedList implements ILinkedList {
                 int start = scanner.nextInt();
                 int end = scanner.nextInt();
 
-                ILinkedList sub = list.sublist(start, end);
+                ILinkedList_ sub = list.sublist(start, end);
                 if (sub == null)
                     System.out.println("Error");
                 else
@@ -333,7 +328,7 @@ public class SingleLinkedList implements ILinkedList {
         Scanner scanner = new Scanner(System.in);
 
         int[] arr = getArr(scanner);
-        ILinkedList list = new SingleLinkedList();
+        ILinkedList_ list = new DoubleLinkedList();
 
         for (int i : arr) {
             list.add(i);
@@ -343,4 +338,5 @@ public class SingleLinkedList implements ILinkedList {
 
         scanner.close();
     }
+
 }
