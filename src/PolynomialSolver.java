@@ -234,7 +234,43 @@ public class PolynomialSolver implements IPolynomialSolver{
     }
 
     public int[][] multiply(char poly1, char poly2) {
-        return new int[0][];
+
+        ILinkedList temp1 = getPoly(poly1);
+        ILinkedList temp2 = getPoly(poly2);
+
+        if (temp1 == null || temp2 == null || temp1.size() == 0 || temp2.size() == 0)
+            return null;
+
+        R.clear();
+        
+
+
+        int s1 = temp1.size(), s2 = temp2.size();
+
+        for(i= s1 + s2-2 ; i>=0 ; i--){
+            R.add(new int[]{0,i});
+        }
+
+
+        for(int i = 0 ; i < s1 ; i++){
+            for(int j = 0 ; j < s2 ; j++){
+                int coef1 = ((int[]) temp1.get(i))[0];
+                int coef2 = ((int[]) temp2.get(j))[0];
+
+                int resExp = (s1 -i -1) + (s2 -j -1) ;
+                int index  = i+j;
+                 
+
+                int oldCoef = ((int[]) R.get(index))[0];
+                R.set(index,{oldCoef + coef1* coef2, resExp });
+                
+
+
+
+            }
+        }
+
+        return getArr2D(R);
     }
 
     private ILinkedList getPoly(char poly) {
