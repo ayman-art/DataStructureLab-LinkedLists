@@ -61,13 +61,13 @@ interface IPolynomialSolver {
 
 public class PolynomialSolver implements IPolynomialSolver{
 
-    ILinkedList_ A = new DoubleLinkedList();
-    ILinkedList_ B = new DoubleLinkedList();
-    ILinkedList_ C = new DoubleLinkedList();
-    ILinkedList_ R = new DoubleLinkedList();
+    ILinkedList A = new SingleLinkedList();
+    ILinkedList B = new SingleLinkedList();
+    ILinkedList C = new SingleLinkedList();
+    ILinkedList R = new SingleLinkedList();
 
     public void setPolynomial(char poly, int[][] terms) {
-        ILinkedList_ temp = getPoly(poly);
+        ILinkedList temp = getPoly(poly);
 
         if (temp == null) {
             System.out.println("Error");
@@ -77,61 +77,183 @@ public class PolynomialSolver implements IPolynomialSolver{
         temp.clear();
         int n = terms.length;
         for (int i = 0; i < n; ++i) {
-            temp.add(terms[0]);
+            temp.add(terms[i]);
         }
     }
 
     public String print(char poly) {
+        String res = "";
+        ILinkedList temp = getPoly(poly);
 
-
-        ILinkedList_ list = getPoly(poly);
-
-        if (list == null) {
-            System.out.println("Error");
+        if (temp == null) {
             return null;
         }
 
-        int n = list.size();
-        String expression = "";
+        int n = temp.size();
+        for (int i = 0; i < n; ++i) {
+            int coef = ((int[]) temp.get(i))[0];
+            int exp = ((int[]) temp.get(i))[1];
 
-        for(int i =0 ; i < n ; ++i)
-            expression+= getTerm(((int[]) list.get(i)));
-        
-            
-        if(expression.charAt(0)=='+')
-            return expression.substring(1);   
-        return expression;
-    
-        
+            if (i == 0) {
+                if (coef < 0) {
+                    res += "-";
+                }
+            } else {
+                if (coef < 0) {
+                    res += "-";
+                } else if (coef > 0) {
+                    res += "+";
+                }
+            }
+            if (Math.abs(coef) != 1)
+                res += Math.abs(coef);
+
+            if (exp != 0)
+                res += "x";
+            if (exp != 1 && exp != 0)
+                res += "^" + exp;
+        }
+
+        return res;
     }
 
     public void clearPolynomial(char poly) {
-        
-        ILinkedList_ temp = getPoly(poly);
+        ILinkedList temp = getPoly(poly);
 
         if (temp == null) {
             System.out.println("Error");
             return;
         }
-        
+
         temp.clear();
-        
     }
 
     public float evaluatePolynomial(char poly, float value) {
-        return 0;
+        float res = 0;
+        ILinkedList temp = getPoly(poly);
+
+        if (temp == null)
+            return Float.POSITIVE_INFINITY;
+
+        int n = temp.size();
+        for (int i = 0; i < n; ++i) {
+            int coef = ((int[]) temp.get(i))[0];
+            int exp = ((int[]) temp.get(i))[1];
+
+            res += coef *  Math.pow(value, exp);
+        }
+
+        return res;
     }
 
     public int[][] add(char poly1, char poly2) {
-        return new int[0][];
+        ILinkedList temp1 = getPoly(poly1);
+        ILinkedList temp2 = getPoly(poly2);
+
+        if (temp1 == null || temp2 == null || temp1.size() == 0 || temp2.size() == 0)
+            return null;
+
+        R.clear();
+        int i = temp1.size() - 1, j = temp2.size() - 1;
+        while (i >= 0 && j >= 0) {
+            int coef1 = ((int[]) temp1.get(i))[0], coef2 = ((int[]) temp2.get(j))[0];
+            int exp = ((int[]) temp1.get(i))[1];
+
+            int[] res = {coef1 + coef2, exp};
+            R.add(0, res);
+
+            i--;
+            j--;
+        }
+
+        while (i >= 0) {
+            int coef1 = ((int[]) temp1.get(i))[0];
+            int exp = ((int[]) temp1.get(i))[1];
+
+            int[] res = {coef1 , exp};
+            R.add(0, res);
+
+            i--;
+        }
+
+        while (j >= 0) {
+            int coef2 = ((int[]) temp2.get(j))[0];
+            int exp = ((int[]) temp2.get(j))[1];
+
+            int[] res = {coef2, exp};
+            R.add(0, res);
+
+            j--;
+        }
+
+        return getArr2D(R);
+
     }
 
     public int[][] subtract(char poly1, char poly2) {
-        return new int[0][];
+        ILinkedList temp1 = getPoly(poly1);
+        ILinkedList temp2 = getPoly(poly2);
+
+        if (temp1 == null || temp2 == null || temp1.size() == 0 || temp2.size() == 0)
+            return null;
+
+        R.clear();
+        int i = temp1.size() - 1, j = temp2.size() - 1;
+        while (i >= 0 && j >= 0) {
+            int coef1 = ((int[]) temp1.get(i))[0], coef2 = ((int[]) temp2.get(j))[0];
+            int exp = ((int[]) temp1.get(i))[1];
+
+            int[] res = {coef1 - coef2, exp};
+            R.add(0, res);
+
+            i--;
+            j--;
+        }
+
+        while (i >= 0) {
+            int coef1 = ((int[]) temp1.get(i))[0];
+            int exp = ((int[]) temp1.get(i))[1];
+
+            int[] res = {coef1 , exp};
+            R.add(0, res);
+
+            i--;
+        }
+
+        while (j >= 0) {
+            int coef2 = ((int[]) temp2.get(j))[0];
+            int exp = ((int[]) temp2.get(j))[1];
+
+            int[] res = {-1 * coef2, exp};
+            R.add(0, res);
+
+            j--;
+        }
+
+        return getArr2D(R);
     }
 
     public int[][] multiply(char poly1, char poly2) {
         return new int[0][];
+    }
+
+    private ILinkedList getPoly(char poly) {
+        switch (poly) {
+            case 'A':
+                return A;
+
+            case 'B':
+                return B;
+
+            case 'C':
+                return C;
+
+            case 'R':
+                return R;
+
+            default:
+                return null;
+        }
     }
 
     private static int[] getArr1D(Scanner scanner) {
@@ -161,7 +283,7 @@ public class PolynomialSolver implements IPolynomialSolver{
         return res;
     }
 
-    private static int[][] getArr2D(ILinkedList_ list) {
+    private static int[][] getArr2D(ILinkedList list) {
         int n = list.size();
         int[][] res = new int[n][2];
 
@@ -173,66 +295,6 @@ public class PolynomialSolver implements IPolynomialSolver{
         return res;
     }
 
-    private ILinkedList_ getPoly(char poly) {
-        switch (poly) {
-            case 'A':
-                return A;
-
-            case 'B':
-                return B;
-
-            case 'C':
-                return C;
-
-            default:
-                return null;
-        }
-    }
-
-
-    private String getTerm(int[] term) {
-
-
-        String termString = "";
-
-        if(term[0]==0){
-            return termString;
-        }
-    
-        
-        // Sign
-        if(term[0]>0)
-            termString += "+";
-        
-        
-        // coof
-        if(term[1]==0){
-            return termString+String.valueOf(term[0]);
-        }
-        
-                
-        if(term[0]==1 );
-            
-        else if (term[0]==-1){
-            termString += "-";
-        }else{
-            termString +=String.valueOf(term[0]);
-        }
-
-        // exp
-        if(term[1]==0);
-        
-        else if(term[1]==1){
-            termString += "x";
-        }else{
-            termString +="x^" + String.valueOf(term[1]);
-        }
-
-        
-
-        return termString;
-    }
-
     public static void HandleInput(IPolynomialSolver list) {
         Scanner scanner = new Scanner(System.in);
 
@@ -240,14 +302,12 @@ public class PolynomialSolver implements IPolynomialSolver{
         String poly1, poly2;
         int[] arr1D;
         int[][] arr2D;
-        while (true) {
+        while (scanner.hasNextLine()) {
             line = scanner.nextLine();
-            if (line.equals(""))
-                break;
 
             switch (line) {
                 case "set":
-                    poly1 = scanner.next();
+                    poly1 = scanner.nextLine();
                     arr1D = getArr1D(scanner);
                     arr2D = getArr2D(arr1D);
 
@@ -256,19 +316,24 @@ public class PolynomialSolver implements IPolynomialSolver{
 
                 case "print":
                     poly1 = scanner.nextLine();
-                    list.print(poly1.charAt(0));
+                    String res = list.print(poly1.charAt(0));
+                    System.out.println(res);
                     break;
 
                 case "add":
                     poly1 = scanner.nextLine();
                     poly2 = scanner.nextLine();
                     list.add(poly1.charAt(0), poly2.charAt(0));
+                    res = list.print('R');
+                    System.out.println(res);
                     break;
 
                 case "sub":
                     poly1 = scanner.nextLine();
                     poly2 = scanner.nextLine();
                     list.subtract(poly1.charAt(0), poly2.charAt(0));
+                    res = list.print('R');
+                    System.out.println(res);
                     break;
 
                 case "mult":
@@ -280,12 +345,14 @@ public class PolynomialSolver implements IPolynomialSolver{
                 case "clear":
                     poly1 = scanner.nextLine();
                     list.clearPolynomial(poly1.charAt(0));
+                    System.out.println("[]");
                     break;
 
                 case "eval":
                     poly1 = scanner.nextLine();
                     float value = scanner.nextFloat();
-                    list.evaluatePolynomial(poly1.charAt(0), value);
+                    int ans = (int)list.evaluatePolynomial(poly1.charAt(0), value);
+                    System.out.println(ans);
                     break;
 
                 default:

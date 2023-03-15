@@ -60,17 +60,17 @@ interface ILinkedList {
 }
 
 
-public class SingleLinkedList implements ILinkedList {
+class SingleLinkedList implements ILinkedList {
     private class Node {
-        public int value;
+        public Object value;
         public Node next;
 
-        Node(int val) {
+        Node(Object val) {
             value = val;
             next = null;
         }
 
-        Node(int val, Node nex) {
+        Node(Object val, Node nex) {
             value = val;
             next = nex;
         }
@@ -99,18 +99,18 @@ public class SingleLinkedList implements ILinkedList {
         for (int i = 0; i < index; ++i)
             temp = temp.next;
 
-        Node elem = new Node((int) element, temp.next);
+        Node elem = new Node(element, temp.next);
         temp.next = elem;
 
         size++;
 
-        printList(this);
+//        printList(this);
 
     }
 
     public void add(Object element) {
 
-        tail.next = new Node((int) element);
+        tail.next = new Node(element);
         tail = tail.next;
 
         size++;
@@ -152,7 +152,7 @@ public class SingleLinkedList implements ILinkedList {
 
         size = 0;
         head.next = null;
-        tail = null;
+        tail = head;
 
     }
 
@@ -207,7 +207,7 @@ public class SingleLinkedList implements ILinkedList {
         Node temp =  head.next;
 
         while (temp != null) {
-            if (temp.value == (int) o)
+            if (temp.value == o)
                 return true;
 
             temp = temp.next;
