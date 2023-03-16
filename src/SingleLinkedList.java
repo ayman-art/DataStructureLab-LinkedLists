@@ -142,9 +142,9 @@ class SingleLinkedList implements ILinkedList {
         for (int i = 0; i <= index; ++i)
             temp = temp.next;
 
-        temp.value = (int) element;
+        temp.value = element;
 
-        printList(this);
+//        printList(this);
 
     }
 
