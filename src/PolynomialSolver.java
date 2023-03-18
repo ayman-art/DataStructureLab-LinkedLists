@@ -78,10 +78,6 @@ public class PolynomialSolver implements IPolynomialSolver{
         for (int i = 0; i < n; ++i) {
             temp.add(terms[i]);
         }
-
-        if (print(poly).equals("0")){
-            throw new RuntimeException();
-        }
     }
 
     public String print(char poly) {
@@ -102,7 +98,7 @@ public class PolynomialSolver implements IPolynomialSolver{
     public void clearPolynomial(char poly) {
         ILinkedList temp = getPoly(poly);
 
-        if (temp == null || temp.size() == 0 || poly == 'R') {
+        if (temp == null || temp.size() == 0 || poly == 'R' || print(poly).equals("0")) {
             throw new RuntimeException();
         }
         System.out.println("[]");
@@ -277,19 +273,14 @@ public class PolynomialSolver implements IPolynomialSolver{
             if (coef == 0)
                 continue;
 
-            if (i == 0) {
-                if (coef < 0) {
-                    res += "-";
-                }
-            } else {
-                if (coef < 0)
-                    res += "-";
-                else
-                    res += "+";
-            }
+            if (coef < 0)
+                res += "-";
+            else
+                res += "+";
 
-            if (i + 1 == n || Math.abs(coef) != 1)
+            if (i + 1 == n || coef != 1)
                 res += Math.abs(coef);
+
 
             if (exp != 0)
                 res += "x";
@@ -300,7 +291,10 @@ public class PolynomialSolver implements IPolynomialSolver{
         if (res.length() == 0)
             return "0";
         if (res.charAt(0) == '+')
-            return res.substring(1);
+            res = res.substring(1);
+        if (res.charAt(0) == '1' && res.length() > 1 && res.charAt(1) == 'x')
+            res = res.substring(1);
+
 
         return res;
     }
@@ -387,6 +381,7 @@ public class PolynomialSolver implements IPolynomialSolver{
                     if (res == null || poly1.equals("R")) {
                         throw new RuntimeException();
                     }
+
                     System.out.println(res);
                     break;
 
@@ -395,11 +390,13 @@ public class PolynomialSolver implements IPolynomialSolver{
                     poly2 = scanner.nextLine();
                     arr2D = list.add(poly1.charAt(0), poly2.charAt(0));
 
-                    if (arr2D == null || poly1.equals("R")) {
+                    if (arr2D == null || poly1.equals("R") || poly2.equals("R")) {
                         throw new RuntimeException();
                     }
+
                     res = list.print('R');
                     System.out.println(res);
+
                     break;
 
                 case "sub":
@@ -407,7 +404,7 @@ public class PolynomialSolver implements IPolynomialSolver{
                     poly2 = scanner.nextLine();
                     arr2D = list.subtract(poly1.charAt(0), poly2.charAt(0));
 
-                    if (arr2D == null || poly1.equals("R")) {
+                    if (arr2D == null || poly1.equals("R") || poly2.equals("R")) {
                         throw new RuntimeException();
                     }
 
@@ -420,12 +417,13 @@ public class PolynomialSolver implements IPolynomialSolver{
                     poly2 = scanner.nextLine();
                     arr2D = list.multiply(poly1.charAt(0), poly2.charAt(0));
 
-                    if (arr2D == null || poly1.equals("R")) {
+                    if (arr2D == null || poly1.equals("R") || poly2.equals("R")) {
                         throw new RuntimeException();
                     }
 
                     res = list.print('R');
                     System.out.println(res);
+
                     break;
 
                 case "clear":
@@ -442,7 +440,7 @@ public class PolynomialSolver implements IPolynomialSolver{
                         throw new RuntimeException();
                     }
 
-                    if (false)
+                    if (value == Math.ceil(value))
                         System.out.println((int)value);
                     else
                         System.out.println(value);
@@ -463,7 +461,7 @@ public class PolynomialSolver implements IPolynomialSolver{
 
             HandleInput(solver);
         } catch (Exception e) {
-            throw new RuntimeException();
+            System.out.println("Error");
         }
     }
 
