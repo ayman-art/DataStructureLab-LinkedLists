@@ -299,17 +299,6 @@ public class PolynomialSolver implements IPolynomialSolver{
         return res;
     }
 
-    private static void negativeSign (ILinkedList list) {
-        int n = list.size();
-
-        for (int i = 0; i < n; ++i) {
-            int coef = ((int[]) list.get(i))[0];
-            int exp = ((int[]) list.get(i))[1];
-
-            int[] res = {-1 * coef, exp};
-            list.set(i, res);
-        }
-    }
 
     private static int[] getArr1D(Scanner scanner) {
         String[] s = scanner.nextLine().replaceAll("\\[|\\]", "").split(",");
